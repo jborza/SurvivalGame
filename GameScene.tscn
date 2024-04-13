@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://b7i0kfpw7lhsu"]
+[gd_scene load_steps=8 format=3 uid="uid://b7i0kfpw7lhsu"]
 
 [ext_resource type="ArrayMesh" uid="uid://djix0r5p3gsx" path="res://Models/Terrain.obj" id="1_1fadp"]
+[ext_resource type="Script" path="res://Player.gd" id="2_cmqoj"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rcugt"]
 albedo_color = Color(0.219608, 0.654902, 0.223529, 1)
@@ -30,6 +31,7 @@ shape = SubResource("ConcavePolygonShape3D_ljfun")
 
 [node name="Player" type="CharacterBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.28541, 0)
+script = ExtResource("2_cmqoj")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -45,3 +47,7 @@ current = true
 
 [node name="Head" type="Node3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.86971, 0.493562, 0, -0.493562, 0.86971, 0, 6, 0)
+shadow_enabled = true
