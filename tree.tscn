@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://p6vfoip2pyex"]
+
+[ext_resource type="ArrayMesh" uid="uid://sh6e80n1iii3" path="res://Models/treePine.obj" id="1_774he"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ppw5g"]
+
+[node name="Tree" type="StaticBody3D"]
+
+[node name="TreePine" type="MeshInstance3D" parent="."]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 1, 0)
+mesh = ExtResource("1_774he")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1.30674, 0, 0, 0, 1, 0, 0, 0, 2.39656, 0, 2.49616, 0)
+shape = SubResource("CylinderShape3D_ppw5g")

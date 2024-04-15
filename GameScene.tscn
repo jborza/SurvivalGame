@@ -1,7 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://b7i0kfpw7lhsu"]
+[gd_scene load_steps=19 format=3 uid="uid://b7i0kfpw7lhsu"]
 
 [ext_resource type="ArrayMesh" uid="uid://djix0r5p3gsx" path="res://Models/Terrain.obj" id="1_1fadp"]
 [ext_resource type="Script" path="res://Player.gd" id="2_cmqoj"]
+[ext_resource type="Script" path="res://DayNightCycle.gd" id="3_0vg4c"]
+[ext_resource type="PackedScene" uid="uid://cdc3mx3khrglk" path="res://need_bar.tscn" id="3_10oqi"]
+[ext_resource type="PackedScene" uid="uid://p6vfoip2pyex" path="res://tree.tscn" id="4_7ibrc"]
+[ext_resource type="Gradient" uid="uid://y44ie3bov66t" path="res://sky_top_color.tres" id="4_d421p"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rcugt"]
 albedo_color = Color(0.219608, 0.654902, 0.223529, 1)
@@ -15,6 +19,33 @@ data = PackedVector3Array(-24.4957, -1.3, 25, -25, -1.3, 25, -24.4957, -1.3, 24.
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_a3pw3"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_7wpl7"]
+
+[sub_resource type="Gradient" id="Gradient_qv2ho"]
+offsets = PackedFloat32Array(0, 0.568965, 1)
+colors = PackedColorArray(0.978139, 0.476283, 5.77569e-07, 1, 1, 1, 1, 1, 0.979894, 0.446862, 0.0175562, 1)
+
+[sub_resource type="Curve" id="Curve_hq2se"]
+_data = [Vector2(0.221053, 0), 0.0, 0.0, 0, 0, Vector2(0.384211, 0.978022), 0.0, 0.0, 0, 0, Vector2(0.657895, 1), 0.0, 0.0, 0, 0, Vector2(0.894737, 0.010989), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Gradient" id="Gradient_nbgjk"]
+colors = PackedColorArray(0, 0, 0.847059, 1, 0, 0, 1, 1)
+
+[sub_resource type="Curve" id="Curve_xm08n"]
+_data = [Vector2(0.205263, 0.032967), 0.0, 0.0, 0, 0, Vector2(0.336842, 0.626374), 0.0, 0.0, 0, 0, Vector2(0.568421, 0.615385), 0.0, 0.0, 0, 0, Vector2(0.710526, 0.010989), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_frbpt"]
+sky_top_color = Color(0.203922, 0.521569, 0.745098, 1)
+ground_bottom_color = Color(0.203922, 0.521569, 0.745098, 1)
+ground_horizon_color = Color(0.184314, 0.431373, 0.803922, 1)
+
+[sub_resource type="Sky" id="Sky_by61h"]
+sky_material = SubResource("ProceduralSkyMaterial_frbpt")
+
+[sub_resource type="Environment" id="Environment_33mge"]
+background_mode = 2
+sky = SubResource("Sky_by61h")
 
 [node name="Main" type="Node3D"]
 
@@ -48,6 +79,56 @@ current = true
 [node name="Head" type="Node3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.86971, 0.493562, 0, -0.493562, 0.86971, 0, 6, 0)
+[node name="PlayerNeeds" type="Node3D" parent="Player"]
+
+[node name="Need" type="Control" parent="Player/PlayerNeeds"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 27.0
+offset_top = 20.0
+offset_right = 360.0
+offset_bottom = 229.0
+
+[node name="NeedBar" parent="Player/PlayerNeeds/Need" instance=ExtResource("3_10oqi")]
+layout_mode = 0
+
+[node name="DayNightCycle" type="Node3D" parent="."]
+script = ExtResource("3_0vg4c")
+start_time = 0.5
+sun_color = SubResource("Gradient_qv2ho")
+sun_intensity = SubResource("Curve_hq2se")
+moon_color = SubResource("Gradient_nbgjk")
+moon_intensity = SubResource("Curve_xm08n")
+sky_top_color = ExtResource("4_d421p")
+sky_horizon_color = ExtResource("4_d421p")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="DayNightCycle"]
+environment = SubResource("Environment_33mge")
+
+[node name="Moon" type="DirectionalLight3D" parent="DayNightCycle"]
+transform = Transform3D(1, 0, 0, 0, 0.869711, 0.493562, 0, -0.493562, 0.869711, 0, 6, 0)
+visible = false
 shadow_enabled = true
+sky_mode = 1
+
+[node name="Sun" type="DirectionalLight3D" parent="DayNightCycle"]
+transform = Transform3D(1, 0, 0, 0, 0.869711, 0.493562, 0, -0.493562, 0.869711, 0, 6, 0)
+shadow_enabled = true
+
+[node name="Tree2" parent="." instance=ExtResource("4_7ibrc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.1211, -0.109389, 8.32725)
+
+[node name="Tree3" parent="." instance=ExtResource("4_7ibrc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.11086, -0.109389, 10.2507)
+
+[node name="Tree4" parent="." instance=ExtResource("4_7ibrc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.7831, -0.109389, -6.76443)
+
+[node name="Tree5" parent="." instance=ExtResource("4_7ibrc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.8965, -0.109389, -5.87669)
+
+[node name="Tree6" parent="." instance=ExtResource("4_7ibrc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.20789, -0.109389, -11.9799)
+
+[node name="Tree" parent="." instance=ExtResource("4_7ibrc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.69152, 0, 0)
